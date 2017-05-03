@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head></head>
+    <body>
+        <h1>Questizzle Email Confirmation</h1>
+        <p>Thank you for creating an account at Questizzle.</p>
+        <p>Please click the following link to confirm your account.</p>
+        <a th:href="${confirmationLink}" th:text="${confirmationLink}">http://localhost:8080/user/confirm/1234</a>
+    </body>
+</html>

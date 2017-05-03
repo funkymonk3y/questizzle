@@ -1,0 +1,66 @@
+<div class="row" *ngIf="user !== null">
+  <div class="col-md-12">
+
+    <ol class="breadcrumb">
+      <li class="active">User Profile</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>User Profile <small>{{ user.username }}</small></h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="metric-panel">
+          <div class="inline metric-large">{{ user.questions }}</div>
+          <div class="inline">Questions</div>
+        </div>
+
+        <div class="metric-panel">
+          <div class="inline metric-medium">{{ user.votes }}</div>
+          <div class="inline">Votes</div>
+          <div class="inline metric-medium metric-right">{{ user.comments }}</div>
+          <div class="inline">Comments</div>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <ul class="nav nav-tabs pad-top">
+          <li role="presentation" class="active"><a>Basic Info</a></li>
+        </ul>
+
+        <form class="form-horizontal pad-top">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Username</label>
+            <div class="col-sm-5">
+              <p class="form-control-static">{{ user.username }}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-5">
+              <p class="form-control-static">{{ user.email }}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Joined</label>
+            <div class="col-sm-5">
+              <p class="form-control-static">{{ user.dateCreated | date: 'shortDate' }}</p>
+            </div>
+          </div>
+        </form>
+
+        <div>
+          <button type="button" class="btn btn-default" (click)="goBack()">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="user === null">
+  <p class="text-center">Loading...</p>
+</div>

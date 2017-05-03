@@ -1,0 +1,95 @@
+<div *ngIf="portal !== null && assessment !== null" class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li><a [routerLink]="['/assessment-search', portal_id]">Portal</a></li>
+      <li class="active">Edit Assessment</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>Edit Assessment <small>{{ portal.name }}</small></h1>
+    </div>
+    <small class="text-info">
+      <em>
+        Created By <a [routerLink]="['/user-profile', assessment.createdBy.username]">{{ assessment.createdBy.username }}</a>
+      </em>
+    </small>
+
+    <div class="row pad-top">
+      <div class="col-md-10">
+        <form class="form-horizontal" [formGroup]="form" (ngSubmit)="onFormSubmit(form.value)">
+          <div class="form-group" [ngClass]="{'has-error': !form.controls['name'].valid && form.controls['name'].touched}">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name" id="name" formControlName="name" placeholder="Assessment Name" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="instructions" class="col-sm-2 control-label">Instructions</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="instructions" id="instructions" rows="4" cols="50" formControlName="instructions" placeholder="Type any instructions for the assessment takers" autocomplete="off"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Topics</label>
+            <div class="col-sm-10">
+              <div class="checkbox" *ngFor="let i of topicIndexes">
+                <label>
+                  <input type="checkbox" name="topic_{{ i }}" formControlName="topic_{{ i }}"> {{ portal.topics[i - 1] }}
+                </label>
+              </div>
+              <div *ngIf="topicNotChosenError" class="alert alert-danger error-alert">At least one topic should be chosen.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Questions</label>
+            <div class="col-sm-10">
+              <table class="table">
+                <tr>
+                  <th>Question</th>
+                  <th>Topics</th>
+                  <th>Date Created</th>
+                  <th>Created By</th>
+                  <th>Action</th>
+                </tr>
+                <tr *ngFor="let question of assessment.questions; let i = index">
+                  <td><p class="text-info"><em>{{ question.text | slice:0:50 }}</em></p></td>
+                  <td>{{ question.topics }}</td>
+                  <td>{{ question.dateCreated | date: 'shortDate' }}</td>
+                  <td>{{ question.createdBy.username }}</td>
+                  <td>
+                    <a class="btn btn-default btn-xs" (click)="removeQuestion(i)">
+                      <span class="glyphicon glyphicon-minus-sign"></span>
+                      Remove
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionSearchModal">Add Question</button>
+            </div>
+          </div>
+
+          <div class="form-group pad-top">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="button" class="btn btn-default" [routerLink]="['/assessment-search', portal_id]">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+              </button>
+              <button type="submit" class="btn btn-success" [disabled]="!form.valid">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<edit-question-search-popup></edit-question-search-popup>
+
+<div *ngIf="portal === null">
+  <p class="text-center">Loading...</p>
+</div>

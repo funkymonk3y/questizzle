@@ -1,0 +1,50 @@
+<div class="modal fade" id="questionSearchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Question Search</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="performSearch(form.value)">
+          <div class="input-group">
+            <input type="text" name="query" id="query" formControlName="query" class="form-control" placeholder="Search for..." autocomplete="off">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-success" [disabled]="!form.valid">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+          </div>
+        </form>
+
+        <hr />
+
+        <table *ngIf="questions.length > 0" class="table">
+          <tr>
+            <th>Question</th>
+            <th>Topics</th>
+            <th>Date Created</th>
+            <th>Created By</th>
+            <th>Action</th>
+          </tr>
+          <tr *ngFor="let question of questions; let i = index">
+            <td><p class="text-info"><em>{{ question.text | slice:0:50 }}</em></p></td>
+            <td>{{ question.topics }}</td>
+            <td>{{ question.dateCreated | date: 'shortDate' }}</td>
+            <td>{{ question.createdBy.username }}</td>
+            <td>
+              <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#questionSearchModal" (click)="addQuestion(i)">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <div *ngIf="questions.length == 0">
+          <p>No questions found.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

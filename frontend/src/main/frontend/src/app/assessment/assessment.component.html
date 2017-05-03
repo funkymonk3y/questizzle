@@ -1,0 +1,176 @@
+<div *ngIf="assessment !== null" class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li><a [routerLink]="['/assessment-search', portal_id]">Portal</a></li>
+      <li class="active">Assessment</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>Assessment <small>{{ assessment.name }}</small></h1>
+    </div>
+    <small class="text-info">
+      <em>
+        Created By <a [routerLink]="['/user-profile', assessment.createdBy.username]">{{ assessment.createdBy.username }}</a>
+      </em>
+    </small>
+
+    <div class="row">
+      <div class="col-md-10">
+        <a (click)="printWindow()" class="pull-right">Printer Friendly</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <p class="form-control-static">{{ assessment.name }}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Instructions</label>
+            <div class="col-sm-10">
+              <p class="form-control-static">{{ assessment.instructions }}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Topics</label>
+            <div class="col-sm-10">
+                <div *ngFor="let topic of assessment.topics">
+                  <span class="label label-default topic-pill">{{ topic }}</span>
+                </div>
+            </div>
+          </div>
+          <div class="form-group no-pad-bottom">
+            <label class="col-sm-2 control-label">Questions</label>
+            <div class="col-sm-10">
+              <table class="table">
+                <tr>
+                  <th>Question</th>
+                  <th>Topics</th>
+                  <th>Date Created</th>
+                  <th>Created By</th>
+                  <th>Likes</th>
+                  <th>Action</th>
+                </tr>
+                <tr *ngFor="let question of assessment.questions">
+                  <td><p class="text-info"><em>{{ question.text | slice:0:50 }}</em></p></td>
+                  <td>{{ question.topics }}</td>
+                  <td>{{ question.dateCreated | date: 'shortDate' }}</td>
+                  <td>{{ question.createdBy.username }}</td>
+                  <td>{{ getNumOfLikes(question.id) }}</td>
+                  <td class="action-column">
+                    <button class="btn btn-success btn-xs" [disabled]="alreadyVoted(question.id)" (click)="likeQuestion(question.id)">
+                      <span class="glyphicon glyphicon-heart"></span>
+                      Like
+                    </button>
+                    &nbsp;
+                    <a class="btn btn-success btn-xs" [routerLink]="['/question', portal_id, question.id]">
+                      <span class="glyphicon glyphicon-eye-open"></span>
+                      View
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Feedback</label>
+            <div class="col-sm-10">
+              <label>Quality</label>
+              <p class="voting-instructions">Rank the quality by selecting one of the below options:</p>
+              <div>
+                <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-link" (click)="onBadClick()" [ngClass]="{'voted': assessment.quality.voted == 'bad'}">
+                    <input type="radio" name="quality" id="bad" autocomplete="off"> Bad
+                    <span class="badge">{{ assessment.quality.votes.bad }}</span>
+                  </label>
+                  <label class="btn btn-link" (click)="onPoorClick()" [ngClass]="{'voted': assessment.quality.voted == 'poor'}">
+                    <input type="radio" name="quality" id="poor" autocomplete="off"> Poor
+                    <span class="badge">{{ assessment.quality.votes.poor }}</span>
+                  </label>
+                  <label class="btn btn-link" (click)="onAverageClick()" [ngClass]="{'voted': assessment.quality.voted == 'average'}">
+                    <input type="radio" name="quality" id="average" autocomplete="off"> Average
+                    <span class="badge">{{ assessment.quality.votes.average }}</span>
+                  </label>
+                  <label class="btn btn-link" (click)="onGoodClick()" [ngClass]="{'voted': assessment.quality.voted == 'good'}">
+                    <input type="radio" name="quality" id="good" autocomplete="off"> Good
+                    <span class="badge">{{ assessment.quality.votes.good }}</span>
+                  </label>
+                  <label class="btn btn-link" (click)="onExcellentClick()" [ngClass]="{'voted': assessment.quality.voted == 'excellent'}">
+                    <input type="radio" name="quality" id="excellent" autocomplete="off"> Excellent
+                    <span class="badge">{{ assessment.quality.votes.excellent }}</span>
+                  </label>
+                </div>
+              </div>
+              <label class="pad-top">Difficulty</label>
+              <p class="voting-instructions">Rank the difficulty by selecting one of the below options:</p>
+              <div>
+                <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-link" (click)="onEasyClick()" [ngClass]="{'voted': assessment.difficulty.voted == 'easy'}">
+                    <input type="radio" name="difficulty" id="easy" autocomplete="off"> Easy
+                    <span class="badge">{{ assessment.difficulty.votes.easy }}</span>
+                  </label>
+                  <label class="btn btn-link" (click)="onAverageDiffClick()" [ngClass]="{'voted': assessment.difficulty.voted == 'average'}">
+                    <input type="radio" name="difficulty" id="average-difficulty" autocomplete="off"> Average
+                    <span class="badge">{{ assessment.difficulty.votes.average }}</span>
+                  </label>
+                  <label class="btn btn-link" (click)="onHardClick()" [ngClass]="{'voted': assessment.difficulty.voted == 'hard'}">
+                    <input type="radio" name="difficulty" id="hard" autocomplete="off"> Hard
+                    <span class="badge">{{ assessment.difficulty.votes.hard }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="button" class="btn btn-default" [routerLink]="['/assessment-search', portal_id]">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <hr />
+
+        <form [formGroup]="commentForm" class="form-horizontal" (ngSubmit)="postComment(commentForm.value)">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Comments</label>
+            <div class="col-sm-6">
+              <textarea class="form-control" rows="4" cols="30" placeholder="Type a comment here" formControlName="comment"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+              <button type="submit" class="btn btn-success" [disabled]="!commentForm.valid">Post</button>
+            </div>
+            <div class="col-sm-offset-2 col-sm-6">
+              <hr />
+
+              <div class="panel panel-default question-panel" *ngFor="let comment of comments">
+                <div class="panel-body">
+                  <div class="text-muted">
+                    <small class="text-success"><em><b>{{ comment.author.username }}</b></em></small>
+                    <small><em> posted:</em></small>
+                    <small class="pull-right"><em>{{ comment.posted | date:'MM/dd/yyyy @ h:mma' }}</em></small>
+                  </div>
+                  <hr class="comment-bar" />
+                  <p class="comment">{{ comment.text }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="assessment === null">
+  <p class="text-center">Loading...</p>
+</div>

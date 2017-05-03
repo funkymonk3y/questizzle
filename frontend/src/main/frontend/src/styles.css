@@ -1,0 +1,223 @@
+/* BEGIN: Bootstrap Theme Overrides  */
+html {
+  height: 100%
+}
+
+body {
+  height: 100%;
+  background-color: #F0F0EF;
+  color: #444444;
+}
+
+a {
+  cursor: pointer;
+  color: #59b559;
+}
+
+a:focus, a:hover {
+  color: #3c763d;
+}
+
+.page-header {
+  border-bottom-color: #59b559;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #5cb85c;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: #F0F0EF;
+}
+
+.text-info {
+  color: #777;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+  background-color: #f5f5f5;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+  background-color: #59b559;
+}
+
+.input-group-addon {
+  background-color: #f5f5f5;
+}
+
+blockquote {
+  border-left: 5px solid #419641;
+}
+
+.btn-link {
+  color: #5cb85c;
+}
+
+.btn-link:focus, .btn-link:hover {
+  color: #3c763d;
+}
+
+/* END: Bootstrap Theme Overrides */
+
+.page-header-tweak {
+  margin-top: 20px;
+}
+
+.mid-center-container {
+  height: 100%;
+  padding-top: 60px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  background-color: #eee;
+}
+
+.main-container {
+  padding-top: 20px;
+}
+
+.search-table {
+  padding-top: 20px;
+}
+
+.portal-header {
+  margin-bottom: 0;
+}
+
+.portal-paragraph {
+  padding-top: 10px;
+}
+
+.wizard-nav {
+  padding-bottom: 10px;
+}
+
+.question-panel {
+  margin-top: 20px;
+}
+
+.answer-panel {
+  margin-left: 2em;
+}
+
+.question-tab-body {
+  padding: 15px;
+}
+
+.comment-bar {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.comment {
+  padding: 5px;
+}
+
+.topic-pill {
+  margin-right: 5px;
+}
+
+.site-header {
+  text-align: center;
+  font-size: 5em;
+}
+
+.logo {
+  margin: 0 auto;
+}
+
+.logo img {
+  width: 100px;
+  margin: 0 auto;
+}
+
+.hint {
+  font-size: 1em;
+}
+
+.error-alert {
+  margin-top: 20px;
+}
+
+.login-info {
+  color: #5cb85c;
+}
+
+.voted {
+  color: #777777;
+  font-weight: bold;
+}
+
+.voted:hover {
+  color: #777777;
+  font-weight: bold;
+}
+
+.voted:focus {
+  color: #777777;
+  font-weight: bold;
+}
+
+.voting-instructions {
+  margin-bottom: 0;
+}
+
+.vote-glance {
+  position:relative;
+  background: #bfbcbc none;
+}
+
+.vote-glance span {
+  position:absolute;
+  left:0;
+  width:100%;
+  text-align:center;
+  z-index:2;
+  color: white;
+}
+
+.inline {
+  display: inline-block !important;
+}
+
+.metric-medium {
+  font-size: 6em;
+}
+
+.metric-large {
+  font-size: 8em;
+  color: #3c763d;
+}
+
+.metric-panel {
+  text-align: center;
+}
+
+.metric-right {
+  margin-left: 0.6em;
+  color: #777;
+}
+
+.pad-top {
+  margin-top: 20px;
+}
+
+.pad-bottom {
+  margin-bottom: 20px;
+}
+
+.no-pad-bottom {
+  margin-bottom: 0;
+}
+
+.print-view {
+  padding: 7pt;
+}
+
+.print-view > h1, h2, h3, h4, h5 {
+  font-weight: bold;
+}
+
+.action-column {
+  white-space: nowrap;
+}

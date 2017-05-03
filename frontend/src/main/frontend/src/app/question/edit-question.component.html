@@ -1,0 +1,113 @@
+<div class="row" *ngIf="question !== null && portal !== null">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li><a [routerLink]="['/portal', portal_id]">Portal</a></li>
+      <li class="active">Edit Question</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>Edit Question</h1>
+    </div>
+    <small class="text-info">
+      <em>
+        Created By <a [routerLink]="['/user-profile', question.createdBy.username]">{{ question.createdBy.username }}</a>
+      </em>
+    </small>
+
+    <div class="row pad-top">
+      <div class="col-md-10">
+        <form class="form-horizontal" [formGroup]="form" (ngSubmit)="onFormSubmit(form.value)">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Question Name</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="question" id="question" rows="8" cols="50" formControlName="question" placeholder="Type your question here" autocomplete="off"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Answers</label>
+            <div class="col-sm-10">
+              <div *ngFor="let i of answerIndexes">
+                <label class="pad-top">Option {{ i }}</label>
+
+                <div class="input-group">
+                  <textarea class="form-control" name="answer_{{ i }}" id="answer_{{ i }}" rows="4" cols="30" formControlName="answer_{{ i }}" rows="4" cols="30" placeholder="Type your answer here" autocomplete="off"></textarea>
+                  <span class="input-group-addon" data-toggle="toggle">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="answer_correct_{{ i }}" formControlName="answer_correct_{{ i }}"> Correct
+                    </label>
+                  </div>
+                </span>
+                </div>
+              </div>
+
+              <div class="pad-top">
+                <button type="button" class="btn btn-success" (click)="removeAnswer()" [disabled]="answerIndexes.length <= 1">
+                  <span class="glyphicon glyphicon-minus"></span>
+                </button>
+                <button type="button" class="btn btn-success" (click)="addAnswer()">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Topics</label>
+            <div class="col-sm-10">
+              <div class="checkbox" *ngFor="let i of topicIndexes">
+                <label>
+                  <input type="checkbox" name="topic_{{ i }}" formControlName="topic_{{ i }}"> {{ portal.topics[i - 1] }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Hints</label>
+            <div class="col-sm-10">
+              <div *ngFor="let i of hintIndexes">
+                <label class="pad-top">Hint {{ i }}</label>
+                <textarea class="form-control" name="hint_{{ i }}" id="hint_{{ i }}" rows="4" cols="30" formControlName="hint_{{ i }}" placeholder="Type a hint here" autocomplete="off"></textarea>
+              </div>
+
+              <div class="pad-top">
+                <button type="button" class="btn btn-success" (click)="removeHint()" [disabled]="hintIndexes.length <= 1">
+                  <span class="glyphicon glyphicon-minus"></span>
+                </button>
+                <button type="button" class="btn btn-success" (click)="addHint()">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="alert alert-danger" role="alert" *ngIf="errorMessages.length > 0">
+                <p *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group pad-top">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="button" class="btn btn-default" [routerLink]="['/portal', portal_id]">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+              </button>
+              <button type="submit" class="btn btn-success" [disabled]="!form.valid">Save</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="question === null">
+  <p class="text-center">Loading...</p>
+</div>

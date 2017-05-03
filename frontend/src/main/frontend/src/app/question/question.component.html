@@ -1,0 +1,174 @@
+<div *ngIf="question !== null" class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li><a [routerLink]="['/portal', portalId]">Portal</a></li>
+      <li class="active">Question</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>Question</h1>
+    </div>
+    <small class="text-info">
+      <em>
+        Created By <a [routerLink]="['/user-profile', question.createdBy.username]">{{ question.createdBy.username }}</a>
+      </em>
+    </small>
+
+    <div class="row">
+      <div class="col-md-10">
+        <div class="panel panel-default question-panel">
+          <div class="panel-body" [innerHtml]="question.text | newline"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        <ul class="nav nav-tabs">
+          <li role="presentation" (click)="onChoicesTabClick()" [ngClass]="{'active': choicesTab}"><a>Choices</a></li>
+          <li role="presentation" (click)="onHintsTabClick()" [ngClass]="{'active': hintsTab}"><a>Hints</a></li>
+          <li role="presentation" (click)="onFeedbackTabClick()" [ngClass]="{'active': feedbackTab}"><a>Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row question-tab-body" *ngIf="choicesTab">
+      <div class="col-md-10">
+        <form [formGroup]="form" (ngSubmit)="checkAnswers(form.value)">
+          <p>Choose the correct answers.</p>
+
+          <div class="form-group">
+            <div class="answer-panel">
+              <div *ngFor="let answer of question.answers; let i = index" class="checkbox">
+                <label>
+                  <input type="checkbox" formControlName="answer_{{ i + 1 }}"> {{ answer.text }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button type="type" class="btn btn-success">Check</button>
+          </div>
+        </form>
+
+        <p class="text-danger portal-paragraph lead" *ngIf="answerIncorrectly"><span class="glyphicon glyphicon-remove"></span> Incorrect!</p>
+        <p class="text-success portal-paragraph lead" *ngIf="answerIncorrectly == false"><span class="glyphicon glyphicon-ok"></span> Correct!</p>
+
+        <hr />
+
+        <h4>Topics</h4>
+        <div *ngFor="let topic of question.topics">
+          <span class="label label-default topic-pill">{{ topic }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row question-tab-body" *ngIf="hintsTab">
+      <div class="col-md-8">
+        <blockquote *ngFor="let hint of revealedHints" class="hint">
+          <p>{{ hint }}</p>
+        </blockquote>
+
+        <button type="button" class="btn btn-success" (click)="revealHint()" [disabled]="revealedHints.length == question.hints.length">Reveal</button>
+
+        <hr />
+      </div>
+    </div>
+
+    <div class="row question-tab-body" *ngIf="feedbackTab">
+      <div class="col-md-6">
+        <form [formGroup]="commentForm" (ngSubmit)="postComment(commentForm.value)">
+          <div class="form-group">
+            <label>Quality</label>
+            <p class="voting-instructions">Rank the quality by selecting one of the below options:</p>
+            <div>
+              <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-link" (click)="onBadClick()" [ngClass]="{'voted': question.quality.voted == 'bad'}">
+                  <input type="radio" name="quality" id="bad" autocomplete="off"> Bad
+                  <span class="badge">{{ question.quality.votes.bad }}</span>
+                </label>
+                <label class="btn btn-link" (click)="onPoorClick()" [ngClass]="{'voted': question.quality.voted == 'poor'}">
+                  <input type="radio" name="quality" id="poor" autocomplete="off"> Poor
+                  <span class="badge">{{ question.quality.votes.poor }}</span>
+                </label>
+                <label class="btn btn-link" (click)="onAverageClick()" [ngClass]="{'voted': question.quality.voted == 'average'}">
+                  <input type="radio" name="quality" id="average" autocomplete="off"> Average
+                  <span class="badge">{{ question.quality.votes.average }}</span>
+                </label>
+                <label class="btn btn-link" (click)="onGoodClick()" [ngClass]="{'voted': question.quality.voted == 'good'}">
+                  <input type="radio" name="quality" id="good" autocomplete="off"> Good
+                  <span class="badge">{{ question.quality.votes.good }}</span>
+                </label>
+                <label class="btn btn-link" (click)="onExcellentClick()" [ngClass]="{'voted': question.quality.voted == 'excellent'}">
+                  <input type="radio" name="quality" id="excellent" autocomplete="off"> Excellent
+                  <span class="badge">{{ question.quality.votes.excellent }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Difficulty</label>
+            <p class="voting-instructions">Rank the difficulty by selecting one of the below options:</p>
+            <div>
+              <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-link" (click)="onEasyClick()" [ngClass]="{'voted': question.difficulty.voted == 'easy'}">
+                  <input type="radio" name="difficulty" id="easy" autocomplete="off"> Easy
+                  <span class="badge">{{ question.difficulty.votes.easy }}</span>
+                </label>
+                <label class="btn btn-link" (click)="onAverageDiffClick()" [ngClass]="{'voted': question.difficulty.voted == 'average'}">
+                  <input type="radio" name="difficulty" id="average-difficulty" autocomplete="off"> Average
+                  <span class="badge">{{ question.difficulty.votes.average }}</span>
+                </label>
+                <label class="btn btn-link" (click)="onHardClick()" [ngClass]="{'voted': question.difficulty.voted == 'hard'}">
+                  <input type="radio" name="difficulty" id="hard" autocomplete="off"> Hard
+                  <span class="badge">{{ question.difficulty.votes.hard }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Comment</label>
+            <textarea class="form-control" rows="4" cols="30" placeholder="Type a comment here" formControlName="comment"></textarea>
+          </div>
+
+          <div>
+            <button type="submit" class="btn btn-success" [disabled]="!commentForm.valid">Post</button>
+          </div>
+        </form>
+
+        <hr />
+
+        <div *ngIf="comments.length > 0">
+          <h4>Comments</h4>
+
+          <div class="panel panel-default question-panel" *ngFor="let comment of comments">
+            <div class="panel-body">
+              <div class="text-muted">
+                <small class="text-success"><em><b>{{ comment.author.username }}</b></em></small>
+                <small><em> posted:</em></small>
+                <small class="pull-right"><em>{{ comment.posted | date:'MM/dd/yyyy @ h:mma' }}</em></small>
+              </div>
+              <hr class="comment-bar" />
+              <p class="comment">{{ comment.text }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-default" (click)="onBackClick()">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="question === null">
+  <p class="text-center">Loading...</p>
+</div>

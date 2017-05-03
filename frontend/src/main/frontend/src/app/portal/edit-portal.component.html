@@ -1,0 +1,71 @@
+<div class="row" *ngIf="portal !== null">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li class="active">Edit Portal</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>Edit Portal</h1>
+    </div>
+    <small class="text-info">
+      <em>
+        Created By <a [routerLink]="['/user-profile', portal.createdBy.username]">{{ portal.createdBy.username }}</a>
+      </em>
+    </small>
+
+    <div class="row pad-top">
+      <div class="col-md-10">
+        <form class="form-horizontal" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+          <div class="form-group" [ngClass]="{'has-error': !form.controls['name'].valid && form.controls['name'].touched}">
+            <label for="name" class="col-sm-2 control-label">Portal Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name" id="name" formControlName="name" placeholder="Portal Name" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="form-group" [ngClass]="{'has-error': !form.controls['description'].valid && form.controls['description'].touched}">
+            <label for="description" class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="description" id="description" rows="4" cols="50" formControlName="description" placeholder="Portal Description" autocomplete="off"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admins" class="col-sm-2 control-label">Portal Admins</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="admins" id="admins" rows="4" cols="50" formControlName="admins" placeholder="List of portal administrators" autocomplete="off"></textarea>
+              <small>Provide a comma-delimited list of portal administrators.</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="users" class="col-sm-2 control-label">Standard Users</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="users" id="users" rows="4" cols="50" formControlName="users" placeholder="List of users to grant access" autocomplete="off"></textarea>
+              <small>Provide a comma-delimited list of users to grant access.</small>
+            </div>
+          </div>
+
+          <div class="form-group" [ngClass]="{'has-error': !form.controls['topics'].valid && form.controls['topics'].touched}">
+            <label for="topics" class="col-sm-2 control-label">Topic List</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="topics" id="topics" rows="4" cols="50" formControlName="topics" placeholder="List of official topics" autocomplete="off"></textarea>
+              <small>Provide a comma-delimited list of official topics.</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="button" class="btn btn-default" [routerLink]="['/portal-search']">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+              </button>
+              <button type="submit" class="btn btn-success" [disabled]="!form.valid">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

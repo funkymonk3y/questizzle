@@ -1,0 +1,23 @@
+<div *ngIf="assessment !== null" class="print-view">
+  <h3>{{ assessment.name }}</h3>
+  <p>{{ assessment.instructions }}</p>
+
+  <h5 class="pad-top">Topics Covered</h5>
+  <ul class="list-unstyled">
+    <li *ngFor="let topic of assessment.topics">
+      {{ topic }}
+    </li>
+  </ul>
+
+  <h5 class="pad-top">Questions</h5>
+  <ol>
+    <li class="pad-bottom" *ngFor="let question of assessment.questions">
+      <p [innerHtml]="question.text | newline"></p>
+      <ol type="A">
+        <li *ngFor="let answer of question.answers">
+          <span>{{ answer.text }}</span>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</div>

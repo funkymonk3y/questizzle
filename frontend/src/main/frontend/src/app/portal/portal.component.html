@@ -1,0 +1,103 @@
+<div *ngIf="portalInfo !== null" class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li class="active">Portal</li>
+    </ol>
+
+    <div class="page-header page-header-tweak portal-header">
+      <h1>Portal <small>{{ portalInfo.name }}</small></h1>
+    </div>
+    <small class="text-info">
+      <em>
+        Created By <a [routerLink]="['/user-profile', portalInfo.createdBy.username]">{{ portalInfo.createdBy.username }}</a>
+      </em>
+    </small>
+    <p class="portal-paragraph">{{ portalInfo.description }}</p>
+
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav nav-tabs">
+          <li role="presentation" class="active"><a>Questions</a></li>
+          <li role="presentation"><a [routerLink]="['/assessment-search', portalId]">Assessments</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row page-header-tweak">
+      <div class="col-md-8">
+        <button type="button" class="btn btn-success" [routerLink]="['/create-question', portalId]">Create Question</button>
+        <button type="button" class="btn btn-success" [routerLink]="['/practice', portalId]" [disabled]="questions.length == 0">Practice</button>
+      </div>
+      <div class="col-md-4">
+        <form [formGroup]="form" (ngSubmit)="onFormSubmit(form.value)">
+          <div class="input-group">
+            <input type="text" name="query" id="query" formControlName="query" class="form-control" placeholder="Search for..." autocomplete="off">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-success">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div *ngIf="questions.length > 0" class="row search-table">
+      <div class="col-md-12">
+        <table class="table">
+          <tr>
+            <th>Question</th>
+            <th>Quality</th>
+            <th>Difficulty</th>
+            <th>Topics</th>
+            <th>Date Created</th>
+            <th>Created By</th>
+            <th>Action</th>
+          </tr>
+          <tr *ngFor="let question of questions">
+            <td><p class="text-info"><em>{{ question.text | slice:0:100 }}</em></p></td>
+            <td>
+              <div class="progress vote-glance">
+                <div class="progress-bar progress-bar-success" [style.width.%]="qualityPercentage(question)">
+                </div>
+                <span>{{ amtOfPositiveQualityVotes(question) }}/{{ amtOfQualityVotes(question) }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="progress vote-glance">
+                <div class="progress-bar progress-bar-success" [style.width.%]="difficultyPercentage(question)">
+                </div>
+                <span>{{ question.difficulty.votes.hard }}/{{ amtOfDifficultyVotes(question) }}</span>
+              </div>
+            </td>
+            <td>{{ question.topics }}</td>
+            <td>{{ question.dateCreated | date: 'shortDate' }}</td>
+            <td>{{ question.createdBy.username }}</td>
+            <td class="action-column">
+              <a class="btn btn-success btn-xs" [routerLink]="['/edit-question', portalId, question.id]">
+                <span class="glyphicon glyphicon-edit"></span>
+                Edit
+              </a>
+              &nbsp;
+              <a class="btn btn-success btn-xs" [routerLink]="['/question', portalId, question.id]">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                View
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="questions.length == 0" class="row search-table">
+      <div class="col-md-12">
+        <p class="text-center">No questions exist.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="portalInfo === null">
+  <p class="text-center">Loading...</p>
+</div>

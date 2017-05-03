@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <li><a [routerLink]="['/portal-search']">Portal Search</a></li>
+      <li><a [routerLink]="['/portal', portalId]">Portal</a></li>
+      <li class="active">Create Question</li>
+    </ol>
+
+    <div class="page-header page-header-tweak">
+      <h1>Create Question <small *ngIf="portalInfo !== null">{{ portalInfo.name }}</small></h1>
+    </div>
+
+    <ul class="nav nav-pills wizard-nav">
+      <li role="presentation" (click)="questionPillClick()" [ngClass]="{'active': questionPill}"><a>Question</a></li>
+      <li role="presentation" (click)="answersPillClick()" [ngClass]="{'active': answersPill}"><a>Answers</a></li>
+      <li role="presentation" (click)="categoriesPillClick()" [ngClass]="{'active': categoriesPill}"><a>Topics</a></li>
+      <li role="presentation" (click)="hintsPillClick()" [ngClass]="{'active': hintsPill}"><a>Hints</a></li>
+    </ul>
+
+    <form [formGroup]="form" (ngSubmit)="onFormSubmit(form.value)">
+      <div *ngIf="questionPill">
+        <textarea class="form-control" name="question" id="question" rows="8" cols="50" formControlName="question" placeholder="Type your question here" autocomplete="off"></textarea>
+      </div>
+
+      <div *ngIf="answersPill">
+        <div class="row">
+          <div class="col-md-8">
+            <div *ngFor="let i of answerIndexes" class="form-group">
+              <label for="answer_{{ i }}">Option {{ i }}</label>
+
+              <div class="input-group">
+                <textarea class="form-control" name="answer_{{ i }}" id="answer_{{ i }}" rows="4" cols="30" formControlName="answer_{{ i }}" placeholder="Type your answer here" autocomplete="off"></textarea>
+                <span class="input-group-addon" data-toggle="toggle">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="answer_correct_{{ i }}" formControlName="answer_correct_{{ i }}"> Correct
+                    </label>
+                  </div>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <button type="button" class="btn btn-success" (click)="removeAnswer()" [disabled]="answerIndexes.length <= 1">
+                <span class="glyphicon glyphicon-minus"></span>
+              </button>
+              <button type="button" class="btn btn-success" (click)="addAnswer()">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="categoriesPill">
+        <p>Select which topics this question belongs to.</p>
+        <div class="checkbox" *ngFor="let topic of portalInfo.topics; let i = index">
+          <label>
+            <input type="checkbox" name="topic_{{ i }}" formControlName="topic_{{ i }}"> {{ topic }}
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="hintsPill">
+        <div class="row">
+          <div class="col-md-10">
+            <p>Create gradual hints that eventually lead to the full solution.</p>
+            <div *ngFor="let i of hintIndexes" class="form-group">
+              <label for="hint_{{ i }}">Hint {{ i }}</label>
+              <textarea class="form-control" name="hint_{{ i }}" id="hint_{{ i }}" rows="4" cols="30" formControlName="hint_{{ i }}" placeholder="Type a hint here" autocomplete="off"></textarea>
+            </div>
+
+            <div>
+              <button type="button" class="btn btn-success" (click)="removeHint()" [disabled]="hintIndexes.length <= 1">
+                <span class="glyphicon glyphicon-minus"></span>
+              </button>
+              <button type="button" class="btn btn-success" (click)="addHint()">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav aria-label="...">
+        <ul class="pager">
+          <li class="previous" *ngIf="!questionPill">
+            <a (click)="previousClick()"><span aria-hidden="true">&larr;</span> Previous</a>
+          </li>
+          <li class="next" *ngIf="!hintsPill">
+            <a (click)="nextClick()">Next <span aria-hidden="true">&rarr;</span></a>
+          </li>
+          <li class="next" *ngIf="hintsPill">
+            <button type="submit" class="btn btn-success pull-right" [disabled]="!form.valid">Save</button>
+          </li>
+        </ul>
+      </nav>
+    </form>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="alert alert-danger" role="alert" *ngIf="errorMessages.length > 0">
+          <p *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-default" (click)="onBackClick()">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+      </button>
+    </div>
+  </div>
+</div>

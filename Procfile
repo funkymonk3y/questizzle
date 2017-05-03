@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -jar backend/target/questizzle.jar --spring.profiles.active=prod
